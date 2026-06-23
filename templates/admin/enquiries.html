@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block title %}Enquiries — Admin{% endblock %}
+{% block admin_content %}
+
+<div class="admin-header">
+  <div>
+    <h1>Customer Enquiries</h1>
+    <p>Messages submitted through the contact form</p>
+  </div>
+</div>
+
+<div class="admin-panel">
+  <div class="admin-panel-head"><h3>All Enquiries ({{ enquiries|length }})</h3></div>
+  {% if enquiries %}
+  <table>
+    <thead><tr><th>Name</th><th>Phone</th><th>Type</th><th>Message</th><th>Received</th><th></th></tr></thead>
+    <tbody>
+      {% for e in enquiries %}
+      <tr>
+        <td class="t-strong">{{ e.name }}</td>
+        <td><a href="tel:{{ e.phone }}" style="color:var(--gold-bright);">{{ e.phone }}</a></td>
+        <td><span class="badge badge-pending">{{ e.enquiry_type }}</span></td>
+        <td>{{ e.message or '—' }}</td>
+        <td>{{ e.created_at.strftime('%d %b %Y, %I:%M %p') if e.created_at else '' }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('admin_delete_enquiry', enquiry_id=e.id) }}" onsubmit="return confirm('Delete this enquiry?');">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No enquiries yet</h3></div>
+  {% endif %}
+</div>
+
+{% endblock %}

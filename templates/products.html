@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Shop Accessories — {{ shop.name }}{% endblock %}
+{% block content %}
+
+<section class="section-tight" style="border-bottom:1px solid var(--line);">
+  <div class="section-inner">
+    <span class="eyebrow">Shop</span>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem); margin-top:10px;">Mobile Accessories</h1>
+    <p style="color:var(--ink-dim); margin-top:10px; max-width:520px;">Genuine cases, chargers, earphones, power banks and more — call or WhatsApp to confirm stock and pricing.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="product-toolbar">
+      <a href="{{ url_for('products') }}" class="chip {{ 'active' if not selected_category }}">All</a>
+      {% for c in categories %}
+        <a href="{{ url_for('products', category=c.id) }}" class="chip {{ 'active' if selected_category == c.id }}">{{ c.name }}</a>
+      {% endfor %}
+    </div>
+
+    {% if products %}
+    <div class="product-grid">
+      {% for p in products %}
+      <div class="product-card">
+        <div class="product-thumb">
+          {% if p.image_url %}
+  <img src="{{ url_for('static', filename=p.image_url) }}" 
+       alt="{{ p.name }}">
+{% else %}
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          {% endif %}
+          <span class="stock-badge {{ 'in' if p.in_stock else 'out' }}">{{ 'In Stock' if p.in_stock else 'Out of Stock' }}</span>
+          {% if p.mrp and p.mrp > p.price %}
+            <span class="discount-badge">{{ ((1 - (p.price / p.mrp)) * 100) | round | int }}% OFF</span>
+          {% endif %}
+        </div>
+        <div class="product-info">
+          <span class="product-name">{{ p.name }}</span>
+          {% if p.description %}<p style="font-size:0.82rem; color:var(--ink-faint);">{{ p.description }}</p>{% endif %}
+          <div class="product-price-row">
+            <span class="price-now">₹{{ p.price | int }}</span>
+            {% if p.mrp and p.mrp > p.price %}<span class="price-was">₹{{ p.mrp | int }}</span>{% endif %}
+          </div>
+          <div class="product-actions">
+            <a href="tel:+91{{ shop.phone_1 }}" class="btn btn-outline">Call</a>
+            <a href="https://wa.me/91{{ shop.phone_1 }}?text=Hi%2C%20I%27m%20interested%20in%20{{ p.name | urlencode }}" target="_blank" rel="noopener" class="btn btn-gold">Enquire</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h3>No products in this category yet</h3>
+      <p>Check back soon, or browse all categories.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

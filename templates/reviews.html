@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Customer Reviews — {{ shop.name }}{% endblock %}
+{% block content %}
+
+<section class="section-tight" style="border-bottom:1px solid var(--line);">
+  <div class="section-inner">
+    <span class="eyebrow">Reviews</span>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem); margin-top:10px;">Customer Reviews</h1>
+    <p style="color:var(--ink-dim); margin-top:10px; max-width:520px;">Real feedback from customers across Rasipuram and Namakkal.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    {% if reviews %}
+    <div class="review-grid">
+      {% for r in reviews %}
+      <div class="review-card">
+        <div class="review-stars">{{ '★' * r.rating }}{{ '☆' * (5 - r.rating) }}</div>
+        <p class="review-text">"{{ r.review_text }}"</p>
+        <div class="review-author">{{ r.customer_name }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h3>No reviews yet</h3>
+      <p>Be the first to share your experience below.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section review-form-section">
+  <div class="section-inner">
+    <span class="eyebrow">Share Your Experience</span>
+    <h2 style="margin:10px 0 24px;">Leave a Review</h2>
+
+    <form class="review-form" action="{{ url_for('submit_review') }}" method="POST">
+      <div class="field">
+        <label for="customer_name">Your Name</label>
+        <input type="text" id="customer_name" name="customer_name" placeholder="Enter your name" required>
+      </div>
+
+      <div class="field">
+        <label>Rating</label>
+        <div class="star-picker">
+          <input type="radio" id="star5" name="rating" value="5" required><label for="star5">★</label>
+          <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+          <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+          <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+          <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="review_text">Your Review</label>
+        <textarea id="review_text" name="review_text" placeholder="Tell us about your experience..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-gold" style="align-self:flex-start;">Submit Review</button>
+      <p style="font-size:0.78rem; color:var(--ink-faint);">Reviews are checked before they appear publicly.</p>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

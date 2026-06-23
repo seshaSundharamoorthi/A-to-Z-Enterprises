@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Repairs — Admin{% endblock %}
+{% block admin_content %}
+
+<div class="admin-header">
+  <div>
+    <h1>Repair Services</h1>
+    <p>Manage the repair services shown on your website</p>
+  </div>
+  <button class="btn btn-gold" onclick="document.getElementById('addRepairForm').classList.toggle('hidden-form')">+ Add Service</button>
+</div>
+
+<div class="admin-form-card hidden-form" id="addRepairForm">
+  <h3 style="margin-bottom:18px; font-size:1rem;">Add Repair Service</h3>
+  <form method="POST" action="{{ url_for('admin_add_repair') }}">
+    <div class="admin-form-grid">
+      <div class="field">
+        <label for="service_name">Service Name</label>
+        <input type="text" id="service_name" name="service_name" placeholder="e.g. Screen Repair" required>
+      </div>
+      <div class="field">
+        <label for="price_range">Price Range</label>
+        <input type="text" id="price_range" name="price_range" placeholder="e.g. Rs.500 - Rs.2000" required>
+      </div>
+      <div class="field">
+        <label for="estimated_time">Estimated Time — optional</label>
+        <input type="text" id="estimated_time" name="estimated_time" placeholder="e.g. 30 mins">
+      </div>
+    </div>
+    <div class="field" style="margin-top:16px;">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" placeholder="Short description of this repair service"></textarea>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:18px;">
+      <button type="submit" class="btn btn-gold">Save Service</button>
+      <button type="button" class="btn btn-outline" onclick="document.getElementById('addRepairForm').classList.add('hidden-form')">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div class="admin-panel">
+  <div class="admin-panel-head"><h3>All Repair Services ({{ repairs|length }})</h3></div>
+  {% if repairs %}
+  <table>
+    <thead><tr><th>Service</th><th>Price Range</th><th>Time</th><th></th></tr></thead>
+    <tbody>
+      {% for r in repairs %}
+      <tr>
+        <td class="t-strong">{{ r.service_name }}</td>
+        <td>{{ r.price_range }}</td>
+        <td>{{ r.estimated_time or '—' }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('admin_delete_repair', repair_id=r.id) }}" onsubmit="return confirm('Delete this service?');">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No repair services yet</h3></div>
+  {% endif %}
+</div>
+
+<style>.hidden-form { display: none; }</style>
+{% endblock %}

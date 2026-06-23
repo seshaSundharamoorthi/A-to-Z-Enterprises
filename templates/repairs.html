@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Repair Services — {{ shop.name }}{% endblock %}
+{% block content %}
+
+<section class="section-tight" style="border-bottom:1px solid var(--line);">
+  <div class="section-inner">
+    <span class="eyebrow">Repairs</span>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem); margin-top:10px;">Mobile Repair Services</h1>
+    <p style="color:var(--ink-dim); margin-top:10px; max-width:560px;">All major brands. Genuine-quality parts. Most repairs completed the same day — walk in or call ahead to check part availability.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="repair-grid">
+      {% for service in repair_services %}
+      <div class="repair-card">
+        <span class="repair-card-num">0{{ loop.index }}</span>
+        <h3>{{ service.service_name }}</h3>
+        <p>{{ service.description }}</p>
+        <div class="repair-card-foot">
+          <span class="repair-price">{{ service.price_range }}</span>
+          {% if service.estimated_time %}<span class="repair-time">{{ service.estimated_time }}</span>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="margin-top:50px; background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius-md); padding:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
+      <div>
+        <h3 style="font-size:1.2rem; margin-bottom:6px;">Not sure what's wrong with your phone?</h3>
+        <p style="color:var(--ink-dim); font-size:0.9rem;">Call us or send a WhatsApp message — we'll help diagnose the issue before you visit.</p>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <a href="tel:+91{{ shop.phone_1 }}" class="btn btn-outline">Call Now</a>
+        <a href="https://wa.me/91{{ shop.phone_1 }}?text=Hi%2C%20I%20need%20help%20with%20a%20mobile%20repair" target="_blank" rel="noopener" class="btn btn-gold">WhatsApp Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

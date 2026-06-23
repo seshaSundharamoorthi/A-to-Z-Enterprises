@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Reviews — Admin{% endblock %}
+{% block admin_content %}
+
+<div class="admin-header">
+  <div>
+    <h1>Reviews</h1>
+    <p>Approve customer reviews before they appear publicly</p>
+  </div>
+</div>
+
+<div class="admin-panel">
+  <div class="admin-panel-head"><h3>All Reviews ({{ reviews|length }})</h3></div>
+  {% if reviews %}
+  <table>
+    <thead><tr><th>Customer</th><th>Rating</th><th>Review</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for r in reviews %}
+      <tr>
+        <td class="t-strong">{{ r.customer_name }}</td>
+        <td style="color:var(--gold);">{{ '★' * r.rating }}</td>
+        <td>{{ r.review_text[:60] }}{% if r.review_text|length > 60 %}...{% endif %}</td>
+        <td><span class="badge {{ 'badge-ok' if r.is_approved else 'badge-pending' }}">{{ 'Approved' if r.is_approved else 'Pending' }}</span></td>
+        <td>
+          <div class="table-actions">
+            {% if not r.is_approved %}
+            <form method="POST" action="{{ url_for('admin_approve_review', review_id=r.id) }}">
+              <button type="submit" class="btn btn-outline btn-sm">Approve</button>
+            </form>
+            {% endif %}
+            <form method="POST" action="{{ url_for('admin_delete_review', review_id=r.id) }}" onsubmit="return confirm('Delete this review?');">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No reviews yet</h3></div>
+  {% endif %}
+</div>
+
+{% endblock %}

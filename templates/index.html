@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">Rasipuram's Trusted Mobile Care</span>
+      <h1>Genuine accessories.<br>Honest <span class="accent">repairs.</span></h1>
+      <p>From a cracked screen to your next phone case — A to Z Enterprises has been Rasipuram's go-to mobile shop for quality parts and fair pricing.</p>
+      <div class="hero-actions">
+        <a href="{{ url_for('repairs') }}" class="btn btn-gold">Book a Repair</a>
+        <a href="{{ url_for('products') }}" class="btn btn-outline">Browse Accessories</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">6+</div>
+          <div class="hero-stat-label">Repair Services</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">8</div>
+          <div class="hero-stat-label">Product Categories</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">14 Hrs</div>
+          <div class="hero-stat-label">Open Daily</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-ticket">
+      <div class="ticket-header">
+        <span class="ticket-title">SERVICE TICKET</span>
+        <span class="ticket-status">● READY</span>
+      </div>
+      <div class="ticket-row"><span class="ticket-label">Issue</span><span class="ticket-value">Screen Replacement</span></div>
+      <div class="ticket-row"><span class="ticket-label">Estimate</span><span class="ticket-value">45 mins</span></div>
+      <div class="ticket-row"><span class="ticket-label">Cost</span><span class="ticket-value">Rs.800 – Rs.4500</span></div>
+      <div class="ticket-row"><span class="ticket-label">Warranty</span><span class="ticket-value">30 Days</span></div>
+      <div class="ticket-row"><span class="ticket-label">Shop</span><span class="ticket-value">A to Z Enterprises</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="trust-strip-inner">
+    <div class="trust-item">
+      <span class="trust-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+      <span class="trust-text"><strong>Genuine Parts</strong><span>Original quality, every time</span></span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+      <span class="trust-text"><strong>Quick Turnaround</strong><span>Most repairs same day</span></span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+      <span class="trust-text"><strong>Local &amp; Trusted</strong><span>Opposite MEC, Kakaveri</span></span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+      <span class="trust-text"><strong>Easy Contact</strong><span>Call or WhatsApp anytime</span></span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">What We Fix</span>
+        <h2>Repair Services</h2>
+      </div>
+      <a href="{{ url_for('repairs') }}" class="btn btn-outline btn-sm">View All Repairs</a>
+    </div>
+
+    <div class="repair-grid">
+      {% for service in repair_services[:6] %}
+      <div class="repair-card">
+        <span class="repair-card-num">0{{ loop.index }}</span>
+        <h3>{{ service.service_name }}</h3>
+        <p>{{ service.description }}</p>
+        <div class="repair-card-foot">
+          <span class="repair-price">{{ service.price_range }}</span>
+          {% if service.estimated_time %}<span class="repair-time">{{ service.estimated_time }}</span>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Shop Accessories</span>
+        <h2>Featured Products</h2>
+      </div>
+      <a href="{{ url_for('products') }}" class="btn btn-outline btn-sm">View All Products</a>
+    </div>
+
+    {% if featured_products %}
+    <div class="product-grid">
+      {% for p in featured_products %}
+      <div class="product-card">
+        <div class="product-thumb">
+          {% if p.image_url %}
+            <img src="{{ p.image_url }}" alt="{{ p.name }}">
+          {% else %}
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          {% endif %}
+          <span class="stock-badge in">In Stock</span>
+          {% if p.mrp and p.mrp > p.price %}
+            <span class="discount-badge">{{ ((1 - (p.price / p.mrp)) * 100) | round | int }}% OFF</span>
+          {% endif %}
+        </div>
+        <div class="product-info">
+          <span class="product-name">{{ p.name }}</span>
+          <div class="product-price-row">
+            <span class="price-now">₹{{ p.price | int }}</span>
+            {% if p.mrp and p.mrp > p.price %}<span class="price-was">₹{{ p.mrp | int }}</span>{% endif %}
+          </div>
+          <div class="product-actions">
+            <a href="tel:+91{{ shop.phone_1 }}" class="btn btn-outline">Call</a>
+            <a href="https://wa.me/91{{ shop.phone_1 }}?text=Hi%2C%20I%27m%20interested%20in%20{{ p.name | urlencode }}" target="_blank" rel="noopener" class="btn btn-gold">Enquire</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h3>Products coming soon</h3>
+      <p>Add products from the admin panel to display them here.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if reviews %}
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Customer Voices</span>
+        <h2>What People Say</h2>
+      </div>
+      <a href="{{ url_for('reviews_page') }}" class="btn btn-outline btn-sm">All Reviews</a>
+    </div>
+    <div class="review-grid">
+      {% for r in reviews[:3] %}
+      <div class="review-card">
+        <div class="review-stars">{{ '★' * r.rating }}{{ '☆' * (5 - r.rating) }}</div>
+        <p class="review-text">"{{ r.review_text }}"</p>
+        <div class="review-author">{{ r.customer_name }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

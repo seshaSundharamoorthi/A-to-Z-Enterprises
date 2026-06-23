@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard — Admin{% endblock %}
+{% block admin_content %}
+
+<div class="admin-header">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Welcome back, {{ session.get('admin_username', 'Admin') }}</p>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-num">{{ product_count }}</div>
+    <div class="stat-label">Total Products</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ repair_count }}</div>
+    <div class="stat-label">Repair Services</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ pending_reviews }}</div>
+    <div class="stat-label">Reviews Awaiting Approval</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ unread_enquiries }}</div>
+    <div class="stat-label">Unread Enquiries</div>
+  </div>
+</div>
+
+<div class="admin-panel">
+  <div class="admin-panel-head">
+    <h3>Recent Enquiries</h3>
+    <a href="{{ url_for('admin_enquiries') }}" class="btn btn-outline btn-sm">View All</a>
+  </div>
+  {% if recent_enquiries %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Phone</th><th>Type</th><th>Message</th><th>Received</th></tr>
+    </thead>
+    <tbody>
+      {% for e in recent_enquiries %}
+      <tr>
+        <td class="t-strong">{{ e.name }}</td>
+        <td>{{ e.phone }}</td>
+        <td><span class="badge badge-pending">{{ e.enquiry_type }}</span></td>
+        <td>{{ e.message[:50] }}{% if e.message and e.message|length > 50 %}...{% endif %}</td>
+        <td>{{ e.created_at.strftime('%d %b, %I:%M %p') if e.created_at else '' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No enquiries yet</h3></div>
+  {% endif %}
+</div>
+
+{% endblock %}

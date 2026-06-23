@@ -1,0 +1,125 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Products — Admin{% endblock %}
+{% block admin_content %}
+
+<div class="admin-header">
+  <div>
+    <h1>Products</h1>
+    <p>Add, edit, or remove items from your shop catalog</p>
+  </div>
+  <button class="btn btn-gold" onclick="document.getElementById('addProductForm').classList.toggle('hidden-form')">+ Add Product</button>
+</div>
+
+<div class="admin-form-card hidden-form" id="addProductForm">
+  <h3 style="margin-bottom:18px; font-size:1rem;">Add New Product</h3>
+ <form method="POST" action="{{ url_for('admin_add_product') }}" enctype="multipart/form-data">
+    <div class="admin-form-grid">
+      <div class="field">
+        <label for="name">Product Name</label>
+        <input type="text" id="name" name="name" placeholder="e.g. Shockproof Back Cover" required>
+      </div>
+      <div class="field">
+        <label for="category_id">Category</label>
+        <select id="category_id" name="category_id" required>
+          <option value="">Select category</option>
+          {% for c in categories %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="price">Selling Price (₹)</label>
+        <input type="number" step="0.01" id="price" name="price" placeholder="299" required>
+      </div>
+      <div class="field">
+        <label for="mrp">MRP (₹) — optional, for discount display</label>
+        <input type="number" step="0.01" id="mrp" name="mrp" placeholder="599">
+      </div>
+      <div class="field">
+    <label for="product_image">Product Image</label>
+    <input type="file" id="product_image" name="product_image" accept="image/*">
+</div>
+      <div class="field checkbox-field" style="align-self:end;">
+        <input type="checkbox" id="is_featured" name="is_featured">
+        <label for="is_featured" style="margin:0;">Show on homepage (Featured)</label>
+      </div>
+    </div>
+    <div class="field" style="margin-top:16px;">
+      <label for="description">Description — optional</label>
+      <textarea id="description" name="description" placeholder="Short product description"></textarea>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:18px;">
+      <button type="submit" class="btn btn-gold">Save Product</button>
+      <button type="button" class="btn btn-outline" onclick="document.getElementById('addProductForm').classList.add('hidden-form')">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div class="admin-panel">
+  <div class="admin-panel-head">
+    <h3>All Products ({{ products|length }})</h3>
+  </div>
+  {% if products %}
+  <table>
+    <thead>
+<tr>
+<th>Image</th>
+<th>Product</th>
+<th>Category</th>
+<th>Price</th>
+<th>Stock</th>
+<th>Featured</th>
+<th></th>
+</tr>
+</thead>
+    <tbody>
+      {% for p in products %}
+<tr>
+
+<td>
+{% if p.image_url %}
+<img src="{{ url_for('static', filename=p.image_url) }}"
+     alt="{{ p.name }}"
+     width="80">
+{% else %}
+No Image
+{% endif %}
+</td>
+
+<td class="t-strong">{{ p.name }}</td>
+        <td>{{ p.category_name }}</td>
+        <td>₹{{ p.price | int }}{% if p.mrp %} <span style="text-decoration:line-through; color:var(--ink-faint); font-size:0.8em;">₹{{ p.mrp | int }}</span>{% endif %}</td>
+        <td>
+          <form method="POST" action="{{ url_for('admin_edit_product', product_id=p.id) }}" style="display:inline;">
+            <input type="hidden" name="name" value="{{ p.name }}">
+            <input type="hidden" name="category_id" value="{{ p.category_id }}">
+            <input type="hidden" name="description" value="{{ p.description or '' }}">
+            <input type="hidden" name="price" value="{{ p.price }}">
+            <input type="hidden" name="mrp" value="{{ p.mrp or '' }}">
+            <input type="hidden" name="image_url" value="{{ p.image_url or '' }}">
+            <input type="hidden" name="is_featured" value="{{ '1' if p.is_featured else '' }}">
+            <button type="submit" name="in_stock" value="{{ '' if p.in_stock else '1' }}" class="badge {{ 'badge-ok' if p.in_stock else 'badge-warn' }}" style="border:none; cursor:pointer;">
+              {{ 'In Stock' if p.in_stock else 'Out of Stock' }}
+            </button>
+          </form>
+        </td>
+        <td>{{ '★ Yes' if p.is_featured else '—' }}</td>
+        <td>
+          <div class="table-actions">
+            <form method="POST" action="{{ url_for('admin_delete_product', product_id=p.id) }}" onsubmit="return confirm('Delete this product?');">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No products yet</h3><p>Add your first product above.</p></div>
+  {% endif %}
+</div>
+
+<style>.hidden-form { display: none; }</style>
+
+{% endblock %}

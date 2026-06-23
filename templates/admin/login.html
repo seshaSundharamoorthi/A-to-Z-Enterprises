@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — {{ shop.name }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="login-shell">
+  <div class="login-card">
+    <div class="brand">
+      <span class="brand-mark">A<span class="brand-mark-z">Z</span></span>
+    </div>
+    <h2>Admin Login</h2>
+    <p class="sub">{{ shop.name }} Management</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:20px;">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}"><span>{{ message }}</span></div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin_login') }}">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" required>
+      </div>
+      <button type="submit" class="btn btn-gold btn-block" style="margin-top:8px;">Log In</button>
+    </form>
+
+    <p style="text-align:center; margin-top:24px; font-size:0.82rem;">
+      <a href="{{ url_for('home') }}" style="color:var(--ink-faint);">&larr; Back to website</a>
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
