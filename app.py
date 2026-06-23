@@ -251,6 +251,10 @@ def submit_review():
 
 
 @app.route("/contact")
+@app.route("/check-image")
+def check_image():
+    import os
+    return str(os.listdir("static/uploads"))
 def contact():
     return render_template("contact.html", shop=SHOP_INFO)
 
