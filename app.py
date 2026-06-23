@@ -29,7 +29,7 @@ SHOP_INFO = {
     "tagline": "Mobile Accessories & Repair Specialists",
     "phone_1": "8838519294",
     "phone_2": "8248398049",
-    "email": "seshasundharamoorthi2005@gmail.com",
+    "email": "sivamaddy143mss@gmail.com",
     "address": "Muthayammal Engineering College Opposite, Kakaveri, Rasipuram, Namakkal",
     "hours": "Morning 8:00 AM – Night 10:00 PM",
 }
