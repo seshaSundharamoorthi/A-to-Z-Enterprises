@@ -254,9 +254,18 @@ def submit_review():
 @app.route("/check-image")
 def check_image():
     import os
-    return str(os.listdir("static/uploads"))
-def contact():
-    return render_template("contact.html", shop=SHOP_INFO)
+
+    upload_path = os.path.join(
+        app.root_path,
+        "static",
+        "uploads"
+    )
+
+    return {
+        "path": upload_path,
+        "exists": os.path.exists(upload_path),
+        "files": os.listdir(upload_path) if os.path.exists(upload_path) else []
+    }
 
 
 @app.route("/contact/submit", methods=["POST"])
