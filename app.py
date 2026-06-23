@@ -56,10 +56,20 @@ def get_db():
 
 
 def init_db():
-    """Create tables and seed data if DB doesn't exist."""
-    if os.path.exists(DB_PATH):
-        return
     conn = get_db()
+
+    conn.executescript("""
+    CREATE TABLE IF NOT EXISTS admin_users (...);
+    CREATE TABLE IF NOT EXISTS products (...);
+    """)
+
+    existing = conn.execute(
+        "SELECT COUNT(*) as c FROM products"
+    ).fetchone()["c"]
+
+    if existing > 0:
+        conn.close()
+        return
     conn.executescript("""
     CREATE TABLE IF NOT EXISTS admin_users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -136,19 +146,7 @@ def init_db():
         ('Camera Repair', 'Front and back camera module repair / replacement', 'Rs.600 - Rs.3000', '40 mins', 'camera', 5),
         ('Water Damage Service', 'Complete cleaning and component-level water damage repair', 'Rs.500 - Rs.3500', '24-48 hrs', 'water', 6);
 
-    INSERT INTO products (category_id, name, description, price, mrp, in_stock, is_featured) VALUES
-        (1, 'Shockproof Back Cover', 'Military grade drop protection, all popular models available', 199, 399, 1, 1),
-        (1, 'Transparent TPU Case', 'Slim fit clear case with anti-yellowing coating', 149, 299, 1, 0),
-        (1, 'Leather Flip Cover', 'Premium PU leather with card slots', 299, 599, 1, 0),
-        (2, '20W Fast Charger', 'PD fast charging adapter, type-C output', 449, 899, 1, 1),
-        (2, '33W Multi-Port Adapter', 'Dual port charger for phone and accessories together', 599, 1199, 1, 0),
-        (3, 'Wired Earphones with Mic', 'Clear bass, in-line mic and remote', 199, 399, 1, 0),
-        (3, 'Bluetooth Neckband', '20 hours battery, fast charging, deep bass', 699, 1499, 1, 1),
-        (4, '10000mAh Power Bank', 'Dual output, fast charging support', 899, 1599, 1, 1),
-        (5, 'Type-C Fast Charging Cable', '1 meter braided cable, 3A fast charging', 99, 199, 1, 0),
-        (6, 'Tempered Glass 9H', 'Edge to edge protection, anti-fingerprint coating', 99, 249, 1, 0),
-        (7, 'Mini Bluetooth Speaker', 'Portable speaker with deep bass, 8 hr playback', 599, 1199, 1, 0),
-        (8, 'Car Mobile Holder', '360 degree rotating dashboard mount', 249, 499, 1, 0);
+
 
     INSERT INTO reviews (customer_name, rating, review_text, is_approved) VALUES
         ('Karthik R', 5, 'Screen repair was quick and affordable. Phone works like new!', 1),
